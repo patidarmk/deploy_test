@@ -14,5 +14,5 @@ export default defineConfig(() => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: "/deploy_test/", // 👈 must match repo name
+  base: "/deploy_test", // 👈 must match repo name
 }));
