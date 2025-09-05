@@ -3,22 +3,22 @@ name: Deploy Vite App to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main   # or master, depending on your repo
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: 22
 
@@ -31,7 +31,15 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./dist   # make sure Vite outputs to dist
 
+  deploy:
+    environment:
+      name: github-pages   # 👈 required
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
